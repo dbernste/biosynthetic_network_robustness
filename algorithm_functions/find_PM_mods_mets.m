@@ -14,10 +14,11 @@ function find_PM_mods_mets(results_location,models_location,mets,metnum,modnum,f
 % modnum: int, index of model to analyze, used for parallelization
 % fixon: cell array - char, metabolite names that will always be added
 % fixoff: cell array - char, metabolite names that will never be added
-% a: int, indicator variable for metabolites randomly added during
-% producibility analysis, a = 0: add intracellular metabolites (remove
-% target), a = 1: add extracellular metabolites (remove target), a = 2: add
-% intracellular metabolites (don't remove target)
+% a: char, indicator variable for metabolites randomly added during
+% producibility analysis, a = int_nt: add intracellular metabolites (remove
+% target), a = ext_nt: add extracellular metabolites (remove target), a = int: add
+% intracellular metabolites (don't remove target), a = all_nt: add all
+% metabolites (remove target)
 % s: logical, Boolean variable for mass balance constraint on all
 % metabolites, s = 0: equality mass balance constraint (S*V=0), s = 1:
 % inequality mass balance constraints (S*V>=0)  
@@ -33,12 +34,12 @@ function find_PM_mods_mets(results_location,models_location,mets,metnum,modnum,f
 % produced for each pair of model and metabolite analyzed.
 
 %%
+files = dir(models_location);
+files = files(~[files.isdir]);
 for I = 1:length(modnum) %for each model
     modelnum = modnum(I) %assign current model number
     
     % Load model
-    files = dir(models_location);
-    files = files(~[files.isdir]);
     fileName = files(modelnum).name;
     filePath = [models_location, filesep, fileName];
     S = load(filePath,'-mat');
@@ -63,14 +64,17 @@ for I = 1:length(modnum) %for each model
             
             % set add variable
             add = zeros(length(model1.mets),1);
-            if a == 0
+            if strcmp(a,'int_nt') == 1
                 add = i_m; % add intracellular metabolites
                 add(target) = 0; % don't add current target
-            elseif a == 1
+            elseif strcmp(a,'ext_nt') == 1
                 add = e_m; % add extracellular metabolites
                 add(target) = 0; % don't add current target
-            elseif a == 2
+            elseif strcmp(a,'int') == 1
                 add = i_m; % add intracellular metabolites
+            elseif strcmp(a,'all_nt') == 1
+                add = ones(length(model1.mets),1);
+                add(target) = 0; % don't add current target
             end
             
             % set fixed metabolites on or off

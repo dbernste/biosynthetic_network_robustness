@@ -82,6 +82,7 @@ for I = 1:length(modnum) %for each model
             [~,fixon_id] = ismember(fixon,model1.mets);
             add(fixon_id) = 0; % do not probabilistically add fixed metabolites
             model1.ub(inds(fixon_id)) = 1000;
+            model1.ub(inds(target_id)) = 0; % do not fix on the addition of the target metabolite
             % off
             [~,fixoff_id] = ismember(fixoff,model1.mets);
             add(fixoff_id) = 0; % do not probabilistically add fixed metabolites

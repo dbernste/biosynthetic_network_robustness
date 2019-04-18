@@ -28,7 +28,7 @@ SUM = 0;
 for i = 1:size(S,1)
     mult = (-1).^(i+1); %define multiplier for inclusion exclusion principle
     jvect = zeros(1,i);
-    SUM = SUM + mult * f_r_calc_prod_prob(1,i,0,jvect,S,Pin); %recursive sum to enumerat binomial coeficient
+    SUM = SUM + mult * f_r_calc_prob(1,i,0,jvect,S,Pin); %recursive sum to enumerat binomial coeficient
 end
 Pout = SUM;
 

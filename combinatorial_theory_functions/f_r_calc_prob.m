@@ -23,7 +23,7 @@ function [sumr] = f_r_calc_prob(s,i,sumr,jvect,S,Pin)
 if i >= 1 %condition for exiting recursive loop (count down from total number of sets being considered)
     for j = s:size(S,1)
         jvect(1,i) = j; %keep track of indicies of the for loops
-        sumr = f_r_calc_prod_prob(j+1,i-1,sumr,jvect,S,Pin); %Recursivelly call function
+        sumr = f_r_calc_prob(j+1,i-1,sumr,jvect,S,Pin); %Recursivelly call function
     end
 else
     % Caclulate value to be summed
